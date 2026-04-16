@@ -139,16 +139,23 @@
 
             document.getElementById('apple-sub').href = webcal;
 
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
             document.getElementById('google-sub').addEventListener('click', function(e) {
                 e.preventDefault();
-                navigator.clipboard.writeText(ics).then(function() {
-                    toast('URL copiee — collez-la dans Ajouter par URL');
-                    setTimeout(function() {
-                        window.open('https://calendar.google.com/calendar/r/settings/addbyurl', '_blank');
-                    }, 600);
-                }).catch(function() {
-                    prompt('Copiez cette URL dans Google Calendar :', ics);
-                });
+                if (isMobile) {
+                    window.location.href = webcal;
+                    toast('Ajoutez le calendrier depuis la fenetre qui s\'affiche');
+                } else {
+                    navigator.clipboard.writeText(ics).then(function() {
+                        toast('URL copiee — collez-la dans Ajouter par URL');
+                        setTimeout(function() {
+                            window.open('https://calendar.google.com/calendar/r/settings/addbyurl', '_blank');
+                        }, 600);
+                    }).catch(function() {
+                        prompt('Copiez cette URL dans Google Calendar :', ics);
+                    });
+                }
             });
 
             document.getElementById('outlook-sub').href =
