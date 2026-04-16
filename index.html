@@ -144,8 +144,11 @@
             document.getElementById('google-sub').addEventListener('click', function(e) {
                 e.preventDefault();
                 if (isMobile) {
-                    window.location.href = webcal;
-                    toast('Ajoutez le calendrier depuis la fenetre qui s\'affiche');
+                    navigator.clipboard.writeText(ics).then(function() {
+                        toast('URL copiee — ouvrez calendar.google.com dans Safari, Parametres → Ajouter par URL et collez');
+                    }).catch(function() {
+                        prompt('Copiez cette URL, puis allez dans calendar.google.com > Parametres > Ajouter par URL :', ics);
+                    });
                 } else {
                     navigator.clipboard.writeText(ics).then(function() {
                         toast('URL copiee — collez-la dans Ajouter par URL');
