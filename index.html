@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendrier Liturgique 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: #FAFAFA;
+            color: #000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 1.5rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .page {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 7vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 3.5rem;
+        }
+
+        .list {
+            border-top: 1px solid #E0E0E0;
+        }
+
+        a.row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.05rem 0;
+            border-bottom: 1px solid #E0E0E0;
+            text-decoration: none;
+            color: #000;
+            transition: opacity 0.15s;
+        }
+
+        a.row:hover {
+            opacity: 0.5;
+        }
+
+        .row-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .row-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .row-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: #000;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .spacer {
+            height: 2.5rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #000;
+            color: #FFF;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            opacity: 0;
+            transition: opacity 0.25s, transform 0.25s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>Calendrier liturgique 2026.</h1>
+
+        <div class="list">
+            <a class="row" id="apple-sub" href="#">
+                <span class="row-name">Apple Calendar</span>
+                <span class="row-icon"><svg viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></span>
+            </a>
+            <a class="row" id="google-sub" href="#">
+                <span class="row-name">Google Calendar</span>
+                <span class="row-icon"><svg viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></span>
+            </a>
+            <a class="row" id="outlook-sub" href="#" target="_blank">
+                <span class="row-name">Outlook</span>
+                <span class="row-icon"><svg viewBox="0 0 24 24"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></span>
+            </a>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="list">
+            <a class="row" href="calendrier_liturgique_2026.ics" download>
+                <span class="row-name">Fichier .ics</span>
+                <span class="row-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg></span>
+            </a>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function() {
+            var base = window.location.href.replace(/index\.html$/, '').replace(/\/$/, '');
+            var ics = base + '/calendrier_liturgique_2026.ics';
+            var webcal = ics.replace(/^https?:/, 'webcal:');
+
+            document.getElementById('apple-sub').href = webcal;
+
+            document.getElementById('google-sub').addEventListener('click', function(e) {
+                e.preventDefault();
+                navigator.clipboard.writeText(ics).then(function() {
+                    toast('URL copiee — collez-la dans Ajouter par URL');
+                    setTimeout(function() {
+                        window.open('https://calendar.google.com/calendar/r/settings/addbyurl', '_blank');
+                    }, 600);
+                }).catch(function() {
+                    prompt('Copiez cette URL dans Google Calendar :', ics);
+                });
+            });
+
+            document.getElementById('outlook-sub').href =
+                'https://outlook.live.com/calendar/0/addfromweb?url=' + encodeURIComponent(ics) +
+                '&name=' + encodeURIComponent('Calendrier Liturgique 2026');
+
+            function toast(msg) {
+                var el = document.getElementById('toast');
+                el.textContent = msg;
+                el.classList.add('show');
+                setTimeout(function() { el.classList.remove('show'); }, 3000);
+            }
+        })();
+    </script>
+</body>
+</html>
